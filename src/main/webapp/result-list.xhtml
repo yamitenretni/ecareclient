@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<h:head>
+    <title>Clients with selected tariff</title>
+</h:head>
+<h:body>
+<h1>Clients with selected tariff</h1>
+<h:dataTable value="#{clientController.clientList}" var="client">
+
+    <h:column>
+        <!-- column header -->
+        <f:facet name="header">Client name</f:facet>
+        <!-- row record -->
+        #{client.firstName} #{client.lastName}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Address</f:facet>
+        #{client.address}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Passport data</f:facet>
+        #{client.passportData}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Birth date</f:facet>
+        <h:outputText value="#{client.birthDate.time}">
+            <f:convertDateTime type="date" dateStyle="short"/>
+        </h:outputText>
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Blocking date</f:facet>
+        <h:outputText value="#{client.blockingDate}">
+            <f:convertDateTime dateStyle="short"/>
+        </h:outputText>
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">E-mail</f:facet>
+        #{client.email}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Contracts</f:facet>
+        <ul>
+            <ui:repeat value="#{client.contractList}" var="contract">
+                <li>
+                    <h:outputText value="#{contract.number}" /> (<h:outputText value="#{contract.tariff}" />)
+                </li>
+            </ui:repeat>
+        </ul>
+    </h:column>
+
+</h:dataTable>
+
+    <a href="/eCareRestClient/get-pdf-report">Get pdf</a>
+</h:body>
+</html>

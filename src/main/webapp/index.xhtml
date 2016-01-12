@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xml:lang="en" lang="en">
+<h:head>
+    <title>Welcome to eCare rest client</title>
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="layout.css"/>
+</h:head>
+<h:body>
+    <div class="page-wrapper">
+        <f:view>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h:form>
+                        <div class="form-group">
+                            <label for="tariff">Tariff</label>
+                            <h:selectOneMenu id="tariff" value="#{clientController.tariff}" styleClass="form-control">
+                                <f:selectItems value="#{tariffController.tariffList.entrySet()}" var="entry"
+                                               itemValue="#{entry.key}"
+                                               itemLabel="#{entry.value}"/>
+                            </h:selectOneMenu>
+                        </div>
+                        <h:commandButton action="#{clientController.loadReport}" value="Get report"
+                                         styleClass="btn btn-success pull-right"/>
+                    </h:form>
+                </div>
+            </div>
+
+            <h:panelGroup layout="block" styleClass="panel panel-default"
+                          rendered="#{clientController.displayTable}">
+                <div class="panel-heading">
+                    <h3>Clients with selected tariff</h3>
+                </div>
+                <h:panelGroup layout="block" styleClass="panel-body"
+                              rendered="#{empty clientController.clientList}">
+                    <h:outputText value="There is no clients with selected tariff, please select another tariff"/>
+                </h:panelGroup>
+                <h:dataTable value="#{clientController.clientList}" var="client" styleClass="table" rendered="#{not empty clientController.clientList}">
+                    <h:column>
+                        <!-- column header -->
+                        <f:facet name="header">Client name</f:facet>
+                        <!-- row record -->
+                        #{client.firstName} #{client.lastName}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Address</f:facet>
+                        #{client.address}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Passport data</f:facet>
+                        #{client.passportData}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Birth date</f:facet>
+                        <h:outputText value="#{client.birthDate.time}">
+                            <f:convertDateTime type="date" dateStyle="short"/>
+                        </h:outputText>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Blocking date</f:facet>
+                        <h:outputText value="#{client.blockingDate}">
+                            <f:convertDateTime type="date" dateStyle="short"/>
+                        </h:outputText>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">E-mail</f:facet>
+                        #{client.email}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Contracts</f:facet>
+                        <ui:repeat value="#{client.contractList}" var="contract">
+                            <p>
+                                <h:outputText value="#{contract.number}"/> (<h:outputText value="#{contract.tariff}"/>)
+                            </p>
+                        </ui:repeat>
+                    </h:column>
+                </h:dataTable>
+                <h:panelGroup layout="block" styleClass="panel-footer" rendered="#{not empty clientController.clientList}">
+                    <h:outputLink value="/eCareRestClient/get-pdf-report" styleClass="btn btn-default pull-right">
+                        <h:outputText value="Get pdf"/>
+                    </h:outputLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:view>
+    </div>
+</h:body>
+</html>
